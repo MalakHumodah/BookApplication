@@ -1,0 +1,72 @@
+[
+  {
+    "title": "Don Quixote",
+    "author": "Miguel de Cervantes",
+    "type": "Satire, Adventure",
+    "img": "assets/Imgs/BooksImgs/DonQuixote.jpg",
+    "description": "Often considered the first modern novel, it follows the adventures of a delusional knight and his loyal squire."
+  },
+  {
+    "title": "The Road",
+    "author": "Cormac McCarthy",
+    "type": "Post-Apocalyptic, Survival Fiction",
+    "img": "assets/Imgs/BooksImgs/TheRoad.jpg",
+    "description": "A post-apocalyptic tale of a father and son's harrowing journey through a devastated world, exploring themes of survival and hope.\n"
+  },
+  {
+    "title": "The Alchemist",
+    "author": "Paulo Coelho",
+    "type": "Philosophical Fiction, Inspirational",
+    "img": "assets/Imgs/BooksImgs/TheAlchemist.jpg",
+    "description": "A philosophical and inspirational tale about a shepherd named Santiago on a journey to discover his personal legend."
+  },
+  {
+    "title": "The Da Vinci Code",
+    "author": "Dan Brown",
+    "type": "Thriller, Mystery",
+    "img": "assets/Imgs/BooksImgs/TheDaVinciCode.jpg",
+    "description": "A gripping thriller that blends art, history, and religion as Harvard symbologist Robert Langdon unravels a mystery hidden within famous artworks."
+  },
+  {
+    "title": "The Road Less Traveled",
+    "author": "M.Scott Peck",
+    "type": "Self-Help, Psychology",
+    "img": "assets/Imgs/BooksImgs/TheRoadLessTraveled.jpg",
+    "description": "A self-help classic that explores the path to personal growth, emotional well-being, and spiritual fulfillment."
+  },
+  {
+    "title": "Moby Dick",
+    "author": "Herman Melville",
+    "type": "Adventure, Symbolic Fiction",
+    "img": "assets/Imgs/BooksImgs/MobyDick.jpg",
+    "description": "An epic adventure and philosophical exploration of obsession, as Captain Ahab pursues the elusive white whale."
+  },
+  {
+    "title": "Brave New World",
+    "author": "Aldous Huxley",
+    "type": "Dystopian, Science Fiction",
+    "img": "assets/Imgs/BooksImgs/BraveNewWorld.jpg",
+    "description": "A dystopian vision of a future society where citizens are controlled through technology, pleasure, and conformity."
+  },
+  {
+    "title": "The Maid",
+    "author": "Nita Prose",
+    "type": "Mystery & Thriller",
+    "img": "assets/Imgs/BooksImgs/TheMaid.jpg",
+    "description": "A classic locked-room mystery concerning wealthy dead people and hotel sanitation protocol."
+  },
+  {
+    "title": "Crime and Punishment",
+    "author": "Fyodor Dostoevsky",
+    "type": "Psychological Fiction, Crime Fiction",
+    "img": "assets/Imgs/BooksImgs/CrimeAndPunishment.jpg",
+    "description": "This novel delves into the tortured mind of Raskolnikov, a young student who commits a murder and grapples with guilt and justice."
+  },
+  {
+    "title": "The Sun Also Rises",
+    "author": "Ernest Hemingway",
+    "type": "Lost Generation Literature, Modernist Fiction",
+    "img": "assets/Imgs/BooksImgs/TheSunAlsoRises.jpg",
+    "description": "Hemingway's novel captures the disillusionment and aimlessness of the post-World War I generation in Europe.\n"
+  }
+]
