@@ -24,6 +24,7 @@ class _GetPostsState extends State<GetPosts> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Get post page'),
+          automaticallyImplyLeading: true,
           actions: [
             ElevatedButton(
                 onPressed: () {

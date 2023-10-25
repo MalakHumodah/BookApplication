@@ -26,16 +26,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           Navigator.of(context).pushNamed(bestBooksScreen);
                         });
                   }
-                  break;
                 case 1:
                   {
                     return MyCard(
                         txt: 'Buy/Sell',
                         onTap: () {
-                          Navigator.of(context).popAndPushNamed(buyBooksPage);
+                          Navigator.of(context).pushNamed(buyBooksPage);
                         });
                   }
-                  break;
                 case 2:
                   {
                     return MyCard(
