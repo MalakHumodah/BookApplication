@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Discover'),
         actions: [
           IconButton(
             onPressed: () {},
@@ -30,36 +31,12 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       drawer: MyDrawer(model: widget.model,),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home Page'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart), label: 'Shopping Cart'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-        ],
-        currentIndex: index,
-        onTap: (int i) {
-          setState(() {
-            index = i;
-            switch (i) {
-              case 0:
-                str = 'Home Page';
-                break;
-              case 1:
-                str = 'Shopping Cart';
-                break;
-              case 2:
-                str = 'Search';
-                break;
-            }
-          });
-        },
-      ),
       body: Center(child: HomePageWidget()),
     );
   }
 }
 
+///for Drawer
 class tileWidget extends StatelessWidget {
   const tileWidget(
       {Key? key, required this.icon, required this.txt, required this.onTap})
@@ -150,7 +127,9 @@ class _MyDrawerState extends State<MyDrawer> {
           tileWidget(
             icon: Icons.home,
             txt: " Home ",
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).popAndPushNamed(homePage);
+            },
           ),
           Divider(
             thickness: 1.5,
@@ -165,9 +144,19 @@ class _MyDrawerState extends State<MyDrawer> {
           ),
           tileWidget(
             icon: Icons.align_vertical_top_sharp,
-            txt: " Top 10 books ",
+            txt: " Your Posts ",
             onTap: () {
-              Navigator.of(context).popAndPushNamed(bestBooksScreen);
+              //Navigator.of(context).popAndPushNamed(homePage);
+            },
+          ),
+          Divider(
+            thickness: 1.5,
+          ),
+          tileWidget(
+            icon: Icons.favorite,
+            txt: " WishList ",
+            onTap: () {
+              //Navigator.of(context).popAndPushNamed(bestBooksScreen);
             },
           ),
           Divider(
