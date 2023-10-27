@@ -5,7 +5,7 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/intro_pages/startPage.dart';
 import 'package:myapp/pages/intro_pages/welcome_page.dart';
-import 'package:myapp/state_management/SharedPref/service/shared_pref.dart';
+import 'package:myapp/state_management/SharedPref/shared_pref.dart';
 
 import '../../FireBase/real_time_dataBase/post_model.dart';
 import '../../FireBase/real_time_dataBase/post_service.dart';

@@ -48,7 +48,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     return MyCard(
                         txt: 'else',
                         onTap: () {
-                          //Navigator.of(context).popAndPushNamed(bestBooksScreen);
+                          Navigator.of(context).popAndPushNamed(fireStore);
                         });
                   }
                   break;

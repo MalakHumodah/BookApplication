@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:myapp/state_management/SharedPref/service/shared_pref.dart';
+import 'package:myapp/state_management/SharedPref/shared_pref.dart';
 
 import '../../router/constant_router.dart';
 import '../../state_management/SharedPref/service/user_service.dart';

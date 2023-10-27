@@ -3,7 +3,7 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:myapp/state_management/SharedPref/service/shared_pref.dart';
+import 'package:myapp/state_management/SharedPref/shared_pref.dart';
 import 'package:uuid/uuid.dart';
 
 import '../user_model.dart';

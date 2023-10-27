@@ -14,6 +14,7 @@ class PostService {
   String root = "/";
   String subRoot = "/subRoot";
 
+  ///Add Post
   Future<void> addPost(PostModel model) async {
     databaseReference = firebaseDatabase.ref();
     //to set more than one value we should use map
@@ -28,6 +29,7 @@ class PostService {
     });
   }
 
+  ///Get Post
   //return PostList
   Future<PostList> getPost() async {
     databaseReference = firebaseDatabase.ref();
@@ -53,4 +55,19 @@ class PostService {
       log('empty list in getPost In PostService Page');
       return PostList(posts: []);
     }
+
+
+    ///Update Post
+  Future<void> updatePost(String id, PostModel model) async {
+    databaseReference = firebaseDatabase.ref('$root/$subRoot/$id');
+    await databaseReference!.update(model.toJson());
+  }
+
+  ///Delete Post
+  Future<void> deletePost(String id) async {
+    databaseReference = firebaseDatabase.ref('$root/$subRoot/$id');
+    await databaseReference!.remove();
+  }
+
+
   }

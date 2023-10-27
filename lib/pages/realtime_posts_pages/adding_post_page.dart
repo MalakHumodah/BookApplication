@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:myapp/FireBase/real_time_dataBase/post_model.dart';
-import 'package:myapp/state_management/Provider/Models/post_provider.dart';
+import 'package:myapp/state_management/Provider/Models/real_time_post_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 

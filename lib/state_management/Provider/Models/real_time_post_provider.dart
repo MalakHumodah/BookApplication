@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:myapp/FireBase/real_time_dataBase/post_model.dart';
 import 'package:myapp/FireBase/real_time_dataBase/post_service.dart';
 
-import '../../SharedPref/service/shared_pref.dart';
+import '../../SharedPref/shared_pref.dart';
 
 class PostProvider extends ChangeNotifier {
-  PostService _postService = PostService();
+  final PostService _postService = PostService();
 
 //because we want to change data so every fun in the service we need to build change data for it
 
@@ -41,6 +41,50 @@ class PostProvider extends ChangeNotifier {
     } else {
       return PostList(posts: []);
     }
+  }
+
+
+
+
+  Future<void> updatePost(String id, PostModel model) async {
+    await _postService.updatePost(id, model).whenComplete(() {
+      refreshPrefs();
+      notifyListeners();
+    }).catchError((e) {
+      log("Update post --> $e");
+    });
+    //BACK
+  }
+
+  Future<void> deletePost(String id) async {
+    await _postService.deletePost(id).whenComplete(() {
+      refreshPrefs();
+      notifyListeners();
+    }).catchError((e) {
+      log("Delete Post --> $e");
+    });
+  }
+
+  PostModel getPostById(String id) {
+    var model = offlinePosts.posts.singleWhere((element) {
+      if (element.id == id) {
+        return true;
+      }
+      return false;
+    });
+    return model;
+  }
+
+  void refreshPrefs() async {
+    await Prefs.remove('postsData');
+    String encodeData = '';
+    List<String> posts = [];
+    PostList postList = await _postService.getPost(); //get all data
+    for (var item in postList.posts) {
+      encodeData = json.encode(item.toJson());
+      posts.add(encodeData);
+    }
+    Prefs.setStringList('postsData', posts);
   }
 
   

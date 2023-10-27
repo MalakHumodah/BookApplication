@@ -20,9 +20,11 @@ class Prefs{
   static Future<bool> setString(String key,String value){
     return  _prefs.setString(key, value);
   }
+
   static Future<bool> setInt(String key,int value){
     return  _prefs.setInt(key, value);
   }
+
   static Future<bool> setBool(String key,bool value){
     return  _prefs.setBool(key, value);
   }
@@ -61,7 +63,7 @@ class Prefs{
   }
 
 
-  // NEW functions
+  /// NEW functions
   //return all keys in the file
   static Set<String> getKeys(){
     return _prefs.getKeys();

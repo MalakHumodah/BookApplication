@@ -4,8 +4,9 @@ import 'package:myapp/pages/realtime_posts_pages/adding_post_page.dart';
 import 'package:myapp/pages/realtime_posts_pages/get_posts_page.dart';
 import 'package:myapp/router/constant_router.dart';
 import 'package:myapp/router/router.dart';
-import 'package:myapp/state_management/Provider/Models/post_provider.dart';
-import 'package:myapp/state_management/SharedPref/service/shared_pref.dart';
+import 'package:myapp/state_management/Provider/Models/cloud_post_provider.dart';
+import 'package:myapp/state_management/Provider/Models/real_time_post_provider.dart';
+import 'package:myapp/state_management/SharedPref/shared_pref.dart';
 import 'package:provider/provider.dart';
 
 
@@ -42,7 +43,8 @@ class RealTimeDataBaseApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => PostProvider()),
+        ChangeNotifierProvider(create: (context) => PostProvider(),),
+        ChangeNotifierProvider(create: (context)=>CloudPostProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:myapp/pages/home_page_widget.dart';
-import 'package:myapp/state_management/SharedPref/service/shared_pref.dart';
+import 'package:myapp/state_management/SharedPref/shared_pref.dart';
 import '../router/constant_router.dart';
 import '../state_management/SharedPref/user_model.dart';
 

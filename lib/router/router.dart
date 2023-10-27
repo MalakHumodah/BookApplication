@@ -5,6 +5,8 @@ import 'package:myapp/pages/realtime_posts_pages/get_posts_page.dart';
 import 'package:myapp/state_management/SharedPref/user_model.dart';
 import '../API/Product_API/all_products_screen.dart';
 import '../pages/errorPage.dart';
+import '../pages/firebase_cloud_pages/add_cloud_post.dart';
+import '../pages/firebase_cloud_pages/firestore_page.dart';
 import '../pages/home_page.dart';
 import '../pages/intro_pages/splash_page.dart';
 import '../pages/intro_pages/sign_in_page.dart';
@@ -66,6 +68,14 @@ class RouterClass {
         case sellBooksPage:
         {
           return _route(AddingPostPage());
+        }
+        case fireStore:
+        {
+          return _route(FireStorePage());
+        }
+        case addingCloudPostPage:
+        {
+          return _route(AddingCloudPostPage());
         }
 
       default:

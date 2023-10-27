@@ -10,6 +10,9 @@ const String allBooksScreen = '/AllBooksScreen';
 const String bestBooksScreen = '/BestBooks';
 const String buyBooksPage = '/GetPosts';
 const String sellBooksPage = '/AddingPostPage';
+const String fireStore = '/fireStore';
+const String addingCloudPostPage = '/addingCloudPostPage';
+
 
 
 
