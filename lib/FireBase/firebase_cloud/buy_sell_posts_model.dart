@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-class PostModel extends ChangeNotifier{
+class BuySellPostModel extends ChangeNotifier{
   String? id;
   String? title;
   String? date;
@@ -9,7 +9,7 @@ class PostModel extends ChangeNotifier{
   String? address;
   int? price;
 
-  PostModel(
+  BuySellPostModel(
       {this.id,
         this.title,
         this.date,
@@ -18,7 +18,7 @@ class PostModel extends ChangeNotifier{
         this.address,
         this.price});
 
-  PostModel.fromJson(Map<String, dynamic> json) {
+  BuySellPostModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     date = json['date'];
@@ -42,28 +42,15 @@ class PostModel extends ChangeNotifier{
 }
 
 class PostList {
-  List<PostModel> posts;
+  List<BuySellPostModel> posts;
 
   PostList({required this.posts});
 
   factory PostList.fromJson(List<dynamic> data) {
-    List<PostModel> dataList = [];
+    List<BuySellPostModel> dataList = [];
     dataList = data.map((item) {
-      return PostModel.fromJson(Map<String, dynamic>.from(item));
+      return BuySellPostModel.fromJson(Map<String, dynamic>.from(item));
     }).toList();
     return PostList(posts: dataList);
   }
 }
-/*class PostList {
-  List<PostModel> posts;
-
-  PostList({required this.posts});
-
-  factory PostList.fromJson(List<dynamic> data) {
-    List<PostModel> dataList = [];
-    dataList = data.map((item) {
-      return PostModel.fromJson(Map<String, dynamic>.from(item));
-    }).toList();
-    return PostList(posts: dataList);
-  }
-}*/

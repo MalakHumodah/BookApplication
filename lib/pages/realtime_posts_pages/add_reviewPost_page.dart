@@ -1,23 +1,24 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../FireBase/firebase_cloud/cloud_posts_model.dart';
-import '../../state_management/Provider/Models/cloud_post_provider.dart';
-class AddingCloudPostPage extends StatefulWidget {
-  const AddingCloudPostPage({Key? key}) : super(key: key);
+import '../../FireBase/real_time_dataBase/review_posts_model.dart';
+import '../../router/constant_router.dart';
+import '../../state_management/Provider/Models/review_post_provider.dart';
+
+class AddingReviewPostPage extends StatefulWidget {
+  const AddingReviewPostPage({Key? key}) : super(key: key);
 
   @override
-  State<AddingCloudPostPage> createState() => _AddingCloudPostPageState();
+  State<AddingReviewPostPage> createState() => _AddingReviewPostPageState();
 }
 
-class _AddingCloudPostPageState extends State<AddingCloudPostPage> {
+class _AddingReviewPostPageState extends State<AddingReviewPostPage> {
   final formKey = GlobalKey<FormState>();
   final title = TextEditingController();
   final summary = TextEditingController();
   final author = TextEditingController();
-  final type = TextEditingController();
+  final rate = TextEditingController();
 
   InputDecoration decoration(String label, String hint) {
     return InputDecoration(
@@ -29,8 +30,7 @@ class _AddingCloudPostPageState extends State<AddingCloudPostPage> {
   }
   @override
   Widget build(BuildContext context) {
-    //var PostProvider =Provider.of<PostProvider>(context);
-    var postProvider = Provider.of<CloudPostProvider>(context);
+    var postProvider = Provider.of<ReviewPostProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Data'),
@@ -53,8 +53,8 @@ class _AddingCloudPostPageState extends State<AddingCloudPostPage> {
                 decoration: decoration('summary', 'Enter summary'),
               ),
               TextFieldItem(
-                controller: type,
-                decoration: decoration('type', 'Enter type'),
+                controller: rate,
+                decoration: decoration('Rate', 'Enter your rate'),
               ),
               Divider(),
               Row(
@@ -65,14 +65,14 @@ class _AddingCloudPostPageState extends State<AddingCloudPostPage> {
                     onPressed: () async {
                       // data from cont --> fill model --> send model using prov
                       var id = Uuid().v4();
-                      var model = CloudPostsModel(
+                      var model = ReviewPostsModel(
                           author: author.text,
                           summary: summary.text,
                           title: title.text,
-                          type: type.text,
+                          type: rate.text,
                           id: id);
                       await postProvider.addPost(model).whenComplete(() {
-                        Navigator.of(context).pop();
+                        Navigator.of(context).popAndPushNamed(reviewPostsPage);
                       });
                     },
                   )

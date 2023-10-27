@@ -7,11 +7,10 @@ const String startPage = '/start';
 const String splashPage = '/';
 const String allProductScreen = '/AllProductScreen';
 const String allBooksScreen = '/AllBooksScreen';
-const String bestBooksScreen = '/BestBooks';
-const String buyBooksPage = '/GetPosts';
-const String sellBooksPage = '/AddingPostPage';
-const String fireStore = '/fireStore';
-const String addingCloudPostPage = '/addingCloudPostPage';
+const String buyPostsPage = '/buyPostsPage';
+const String sellPostPage = '/sellPostPage';
+const String addingReviewPostPage = '/AddingReviewPostPage';
+const String reviewPostsPage = '/ReviewPostsPage';
 
 
 

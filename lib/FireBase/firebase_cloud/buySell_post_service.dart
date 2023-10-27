@@ -2,14 +2,16 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'cloud_posts_model.dart';
+import 'buy_sell_posts_model.dart';
 
-class CloudPostService {
+
+class BuySellPostService {
   final _fireStore = FirebaseFirestore.instance; //to access
   final String collectionName = 'Posts';
 
+
   ///Add Post fun
-  Future<void> addPost(CloudPostsModel model) async {
+  Future<void> addPost(BuySellPostModel model) async {
     //convert the obj(model) to map by toJson Function
     await _fireStore
         .collection(collectionName)
@@ -19,6 +21,7 @@ class CloudPostService {
       log("Something Wrong Happened in cloudPostService(addPost) :  $e ");
     });
   }
+
 
   ///get Post fun
   Future<PostList> getPosts() async {
@@ -36,15 +39,16 @@ class CloudPostService {
     });
     //temp map --> item <- from json
     var tempMap = <String, dynamic>{};
-    CloudPostsModel tempModel;
-    List<CloudPostsModel> posts = [];
+    BuySellPostModel tempModel;
+    List<BuySellPostModel> posts = [];
     for (var item in querySnapshot.docs) {
       tempMap['id'] = item.get('id');
       tempMap['title'] = item.get('title');
       tempMap['author'] = item.get('author');
-      tempMap['type'] = item.get('type');
-      tempMap['summary'] = item.get('summary');
-      tempModel = CloudPostsModel.fromJson(tempMap);
+      tempMap['condition'] = item.get('condition');
+      tempMap['address'] = item.get('address');
+      tempMap['price'] = item.get('price');
+      tempModel = BuySellPostModel.fromJson(tempMap);
       posts.add(tempModel);
     }
 
@@ -52,7 +56,7 @@ class CloudPostService {
   }
 
   ///update post
-  Future<void> updatePost(String id, CloudPostsModel model) async {
+  Future<void> updatePost(String id, BuySellPostModel model) async {
     /// 1. search post using string id or any other field identifier in the post model
     // we can use any other field instead of id
     QuerySnapshot querySnapshot = await _fireStore
@@ -61,8 +65,8 @@ class CloudPostService {
         .get()
         .whenComplete(() => log("Adding Cloud Post Is Done"))
         .catchError((e) =>
-            // ignore: invalid_return_type_for_catch_error
-            log('Something Wrong Happened in cloudPostService(updatePost) :  $e '));
+    // ignore: invalid_return_type_for_catch_error
+    log('Something Wrong Happened in cloudPostService(updatePost) :  $e '));
     String docId = querySnapshot.docs[0]
         .id; //already the array has just one item because the id is unique
     ///change real id step 2
@@ -96,7 +100,7 @@ class CloudPostService {
   }
 
   /// get Post By Id
-  Future<CloudPostsModel> getPostById(String id) async {
+  Future<BuySellPostModel> getPostById(String id) async {
     QuerySnapshot querySnapshot = await _fireStore
         .collection(collectionName)
         .where('id', isEqualTo: id)
@@ -110,8 +114,9 @@ class CloudPostService {
     tempMap['id'] = item.get('id');
     tempMap['title'] = item.get('title');
     tempMap['author'] = item.get('author');
-    tempMap['type'] = item.get('type');
-    tempMap['summary'] = item.get('summary');
-    return CloudPostsModel.fromJson(tempMap);
+    tempMap['condition'] = item.get('condition');
+    tempMap['address'] = item.get('address');
+    tempMap['price'] = item.get('price');
+    return BuySellPostModel.fromJson(tempMap);
   }
 }

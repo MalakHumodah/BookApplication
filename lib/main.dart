@@ -1,11 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/pages/realtime_posts_pages/adding_post_page.dart';
-import 'package:myapp/pages/realtime_posts_pages/get_posts_page.dart';
 import 'package:myapp/router/constant_router.dart';
 import 'package:myapp/router/router.dart';
-import 'package:myapp/state_management/Provider/Models/cloud_post_provider.dart';
-import 'package:myapp/state_management/Provider/Models/real_time_post_provider.dart';
+import 'package:myapp/state_management/Provider/Models/buySell_post_provider.dart';
+import 'package:myapp/state_management/Provider/Models/review_post_provider.dart';
 import 'package:myapp/state_management/SharedPref/shared_pref.dart';
 import 'package:provider/provider.dart';
 
@@ -22,19 +20,6 @@ void main() async {
   runApp(RealTimeDataBaseApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "My Application",
-      home: AddingPostPage(),
-      // home: Select(),
-    );
-  }
-}
 
 class RealTimeDataBaseApp extends StatelessWidget {
   const RealTimeDataBaseApp({Key? key}) : super(key: key);
@@ -43,8 +28,8 @@ class RealTimeDataBaseApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => PostProvider(),),
-        ChangeNotifierProvider(create: (context)=>CloudPostProvider()),
+        ChangeNotifierProvider(create: (context)=>BuySellPostProvider()),
+        ChangeNotifierProvider(create: (context)=>ReviewPostProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,33 +1,37 @@
 import 'dart:developer';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/gestures.dart';
-import '../../FireBase/firebase_cloud/cloud_posts_model.dart';
-import '../../router/constant_router.dart';
-import '../../state_management/Provider/Models/cloud_post_provider.dart';
 
-class FireStorePage extends StatefulWidget {
-  const FireStorePage({Key? key}) : super(key: key);
+import '../../FireBase/real_time_dataBase/review_posts_model.dart';
+import '../../router/constant_router.dart';
+import '../../state_management/Provider/Models/review_post_provider.dart';
+
+class ReviewPostsPage extends StatefulWidget {
+  const ReviewPostsPage({Key? key}) : super(key: key);
 
   @override
-  State<FireStorePage> createState() => _FireStorePageState();
+  State<ReviewPostsPage> createState() => _ReviewPostsPageState();
 }
 
-class _FireStorePageState extends State<FireStorePage> {
+class _ReviewPostsPageState extends State<ReviewPostsPage> {
   PostList? postList;
 
   @override
   Widget build(BuildContext context) {
-    var postProvider = Provider.of<CloudPostProvider>(context);
+    var postProvider = Provider.of<ReviewPostProvider>(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Get Cloud post page'),
+          backgroundColor: Colors.indigoAccent,
+          foregroundColor: Colors.white70,
+          title: Text('Overviews'),
           automaticallyImplyLeading: true,
           actions: [
             ElevatedButton(
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.indigoAccent)),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(addingCloudPostPage);
+                  Navigator.of(context).pushNamed(addingReviewPostPage);
                 },
                 child: Row(
                   children: const [
@@ -66,7 +70,7 @@ class _FireStorePageState extends State<FireStorePage> {
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Navigator.of(context)
-                                    .pushNamed(addingCloudPostPage);
+                                    .pushNamed(addingReviewPostPage);
                               })
                       ]),
                 ),
@@ -76,6 +80,7 @@ class _FireStorePageState extends State<FireStorePage> {
               itemCount: postList!.posts.length,
               itemBuilder: (context, index) {
                 var item = postList!.posts[index];
+                log('Item : ${postList!.posts[0]}');
                 return PostItem(
                   title: item.title!,
                   author: item.author!,
@@ -94,32 +99,67 @@ class _FireStorePageState extends State<FireStorePage> {
 }
 
 class PostItem extends StatelessWidget {
-  const PostItem(
-      {Key? key,
-      required this.onTap,
-      required this.title,
-      required this.author,
-      required this.summary,
-      required this.type})
-      : super(key: key);
+  const PostItem({
+    Key? key,
+    required this.onTap,
+    required this.title,
+    required this.author,
+    required this.summary,
+    required this.type
+  }) : super(key: key);
   final VoidCallback onTap;
   final String title;
   final String author;
+
   final String summary;
+
   final String type;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        onTap: onTap,
-        title: Text(title),
-        subtitle: Column(
-          children: [
-            Text('Author : $author ,,, Type : $type '),
-            Divider(),
-            Text(summary),
-          ],
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Container(
+        height: 300,
+        width: 100,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.indigoAccent.shade100,
+            border: Border.all(color: Colors.indigoAccent)),
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'PlayfairDisplay'),
+              ),
+              Text('by $author',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w300,
+                      fontFamily: 'PlayfairDisplay')),
+              SizedBox(
+                height: 25,
+              ),
+              Text('My overview about this book : $summary',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,fontFamily: 'Dosis'
+                  )),
+              SizedBox(height: 10,),
+              Text('Rate :  $type',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Dosis')),
+            ],
+          ),
         ),
       ),
     );

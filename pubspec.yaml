@@ -100,6 +100,9 @@ flutter:
     - family: PlayfairDisplay
       fonts:
         - asset: assets/fonts/PlayfairDisplay-Regular.ttf
+    - family: Dosis
+      fonts:
+        - asset: assets/fonts/Dosis-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

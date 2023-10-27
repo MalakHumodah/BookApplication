@@ -1,18 +1,19 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
-import 'package:myapp/FireBase/real_time_dataBase/post_model.dart';
-import 'package:myapp/FireBase/real_time_dataBase/post_service.dart';
+import 'package:flutter/foundation.dart';
 
+import '../../../FireBase/real_time_dataBase/review_posts_model.dart';
+import '../../../FireBase/real_time_dataBase/review_service.dart';
 import '../../SharedPref/shared_pref.dart';
 
-class PostProvider extends ChangeNotifier {
-  final PostService _postService = PostService();
+class ReviewPostProvider extends ChangeNotifier {
+  final ReviewPostService _postService = ReviewPostService();
 
 //because we want to change data so every fun in the service we need to build change data for it
 
-  Future<void> addPost(PostModel model) async {
+  ///add Post
+  Future<void> addPost(ReviewPostsModel model) async {
     await _postService.addPost(model).whenComplete(() {
       log("adding post from PostProvider is done");
     }).catchError((error) {
@@ -21,20 +22,22 @@ class PostProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  ///get Post
   Future<PostList> getPost() async {
     log("get post from provider page is done");
     return await _postService.getPost();
   }
 
+  ///get offline Posts
   PostList get offlinePosts {
-    List<PostModel> postList = [];
+    List<ReviewPostsModel> postList = [];
     //get --> null
     var data = Prefs.getStringList('postsData') ?? [];
     if (data.isNotEmpty) {
       //convert list of strings --> model -- add model list -- send Post List
       for (var item in data) {
         var decodeData = json.decode(item);
-        PostModel model = PostModel.fromJson(decodeData);
+        ReviewPostsModel model = ReviewPostsModel.fromJson(decodeData);
         postList.add(model);
       }
       return PostList(posts: postList);
@@ -43,10 +46,7 @@ class PostProvider extends ChangeNotifier {
     }
   }
 
-
-
-
-  Future<void> updatePost(String id, PostModel model) async {
+  Future<void> updatePost(String id, ReviewPostsModel model) async {
     await _postService.updatePost(id, model).whenComplete(() {
       refreshPrefs();
       notifyListeners();
@@ -65,7 +65,7 @@ class PostProvider extends ChangeNotifier {
     });
   }
 
-  PostModel getPostById(String id) {
+  ReviewPostsModel getPostById(String id) {
     var model = offlinePosts.posts.singleWhere((element) {
       if (element.id == id) {
         return true;
@@ -87,13 +87,5 @@ class PostProvider extends ChangeNotifier {
     Prefs.setStringList('postsData', posts);
   }
 
-  
 
-
-
-  }
-
-
-//The provider will be the link between the service and the pages(UI)
-// Data source, application the link between them => service
-// Service, pages(UI) => provider (because we need state management link the UI with Posts)
+}

@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:myapp/JSON/models/book_model.dart';
-import 'package:myapp/pages/top_books_page.dart';
 import '../JSON/services/book_service.dart';
 import '../router/constant_router.dart';
 
@@ -25,7 +24,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           booksList = snapshot.data;
           return CustomScrollView(
             slivers: [
-
               ///Best Books in 2023 Text
               SliverToBoxAdapter(
                 child: Padding(
@@ -58,7 +56,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                         type: book.type!,
                         author: book.author!,
                         description: book.description!,
-
                       );
                     },
                   ),
@@ -79,6 +76,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                     img: 'assets/Imgs/BuySellYourBook.png',
                     color: Colors.amber,
                     title: 'Buy/sell',
+                    onTap: () {
+                      Navigator.of(context).pushNamed(buyPostsPage);
+                    },
                   ),
                 ),
               ),
@@ -90,6 +90,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   img: 'assets/Imgs/shareBook.webp',
                   color: Colors.deepPurpleAccent,
                   title: 'Share',
+                  onTap: () {
+                    Navigator.of(context).pushNamed(reviewPostsPage);
+                  },
                 ),
               ),
 
@@ -100,6 +103,9 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   img: 'assets/Imgs/searchBook.png',
                   color: Colors.blueAccent,
                   title: 'Search',
+                  onTap: () {
+                    //Navigator.of(context).pushNamed(buyBooksPage);
+                  },
                 ),
               ),
 
@@ -119,71 +125,84 @@ class _HomePageWidgetState extends State<HomePageWidget> {
 }
 
 class MyCards extends StatelessWidget {
-  const MyCards({
+  MyCards({
     Key? key,
     required this.txt,
     required this.img,
     required this.color,
     required this.title,
+    required this.onTap,
   }) : super(key: key);
   final String txt;
   final String title;
   final String img;
   final Color color;
+  VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(11.0),
-      child: Container(
-        height: 300,
-        width: 200,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: color,
-            border: Border.all(
-              color: Colors.transparent,
-            )),
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          height: 300,
+          width: 200,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: color,
+              border: Border.all(
+                color: Colors.transparent,
+              )),
 
-        /// img and 2 Text in colmun
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 20),
-              child: Container(
-                  height: 170,
-                  width: 170,
-                  clipBehavior: Clip.antiAlias,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                  child: Image.asset(
-                    img,
-                    fit: BoxFit.fill,
-                  )),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(fontSize: 35, fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    txt,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300,letterSpacing: 1,),textAlign: TextAlign.center,
-                  ),
-                ],
+          /// img and 2 Text in colmun
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, right: 20),
+                child: Container(
+                    height: 170,
+                    width: 170,
+                    clipBehavior: Clip.antiAlias,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    child: Image.asset(
+                      img,
+                      fit: BoxFit.fill,
+                    )),
               ),
-            ),
-            SizedBox(width: 15,)
-          ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      style:
+                          TextStyle(fontSize: 35, fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      txt,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w300,
+                        letterSpacing: 1,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 15,
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -227,7 +246,6 @@ class MyWidget extends StatelessWidget {
                         width: 300,
                       ),
                     ),
-
                     Divider(
                       thickness: 2,
                     ),
@@ -285,7 +303,8 @@ class MyWidget extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 7.0, vertical: 5),
                 child: Text(
                   type,
                   style: TextStyle(fontSize: 17, fontWeight: FontWeight.w300),
@@ -311,55 +330,19 @@ class MyWidget extends StatelessWidget {
                 color: Colors.deepPurple,
                 letterSpacing: 2.5,
                 textBaseline: TextBaseline.alphabetic,
-                fontWeight: FontWeight.w500
-
-            ),
-            children:[
-              TextSpan(text: data, style: TextStyle(
-                fontSize: 20,
-                color: Colors.deepPurple.shade300,
-                letterSpacing: 2.5,
-                textBaseline: TextBaseline.alphabetic,
-              ),),
+                fontWeight: FontWeight.w500),
+            children: [
+              TextSpan(
+                text: data,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.deepPurple.shade300,
+                  letterSpacing: 2.5,
+                  textBaseline: TextBaseline.alphabetic,
+                ),
+              ),
             ],
           ),
-        )
-    );
+        ));
   }
-
-/*void _gotoDetailsPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute<void>(
-      builder: (BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Details of the selected book'),
-        ),
-        body: Center(
-          child: Hero(
-              tag: 'hero-details',
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Image.asset(
-                        img,
-                        height: 300,
-                        width: 300,
-                      ),
-                    ),
-                    Divider(
-                      thickness: 2,
-                    ),
-                    MyText(txt: 'Title', data: title),
-                    MyText(txt: 'Author', data: author),
-                    MyText(txt: 'Type', data: type),
-                    MyText(txt: 'Description', data: description),
-                  ],
-                ),
-              )),
-        ),
-      ),
-    ));
-  }*/
 }

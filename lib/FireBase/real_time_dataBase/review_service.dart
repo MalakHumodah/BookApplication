@@ -1,21 +1,20 @@
 import 'dart:developer';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:myapp/FireBase/real_time_dataBase/post_model.dart';
+import 'package:myapp/FireBase/real_time_dataBase/review_posts_model.dart';
 
-class PostService {
+class ReviewPostService {
   //to access to dataBase we need just one instance
   final FirebaseDatabase firebaseDatabase = FirebaseDatabase.instance;
 
-  //each function need its own reference so we need to initialize the reference in each function alone
-  // here we want to declaration the reference and set the value in each fun so its not final
-
+//each function need its own reference so we need to initialize the reference in each function alone
+// here we want to declaration the reference and set the value in each fun so its not final
   DatabaseReference? databaseReference;
   String root = "/";
   String subRoot = "/subRoot";
 
   ///Add Post
-  Future<void> addPost(PostModel model) async {
+  Future<void> addPost(ReviewPostsModel model) async {
     databaseReference = firebaseDatabase.ref();
     //to set more than one value we should use map
     //so we need to convert the model to map by using toJson fun
@@ -52,13 +51,13 @@ class PostService {
       });
       return PostList.fromJson(postTempList);
     }
-      log('empty list in getPost In PostService Page');
-      return PostList(posts: []);
-    }
+    log('empty list in getPost In PostService Page');
+    return PostList(posts: []);
+  }
 
 
-    ///Update Post
-  Future<void> updatePost(String id, PostModel model) async {
+  ///Update Post
+  Future<void> updatePost(String id, ReviewPostsModel model) async {
     databaseReference = firebaseDatabase.ref('$root/$subRoot/$id');
     await databaseReference!.update(model.toJson());
   }
@@ -69,5 +68,4 @@ class PostService {
     await databaseReference!.remove();
   }
 
-
-  }
+}

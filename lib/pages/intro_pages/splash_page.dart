@@ -7,8 +7,9 @@ import 'package:myapp/pages/intro_pages/startPage.dart';
 import 'package:myapp/pages/intro_pages/welcome_page.dart';
 import 'package:myapp/state_management/SharedPref/shared_pref.dart';
 
-import '../../FireBase/real_time_dataBase/post_model.dart';
-import '../../FireBase/real_time_dataBase/post_service.dart';
+
+import '../../FireBase/real_time_dataBase/review_posts_model.dart';
+import '../../FireBase/real_time_dataBase/review_service.dart';
 import '../../state_management/SharedPref/user_model.dart';
 import '../home_page.dart';
 
@@ -88,7 +89,7 @@ class _SplashPageState extends State<SplashPage> {
   setPostData() async {
     PostList postList;
     List<String> postsAsStrings = [];
-    PostService postService = PostService();
+    ReviewPostService postService = ReviewPostService();
     var jsonData;
     var encodeData;
     //get the serv data

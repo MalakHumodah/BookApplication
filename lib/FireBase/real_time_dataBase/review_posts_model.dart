@@ -1,13 +1,13 @@
-class CloudPostsModel {
+class ReviewPostsModel {
   String? id;
   String? title;
   String? author;
   String? type;
   String? summary;
 
-  CloudPostsModel({this.id, this.title, this.author, this.type, this.summary});
+  ReviewPostsModel({this.id, this.title, this.author, this.type, this.summary});
 
-  CloudPostsModel.fromJson(Map<String, dynamic> json) {
+  ReviewPostsModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     author = json['author'];
@@ -28,14 +28,14 @@ class CloudPostsModel {
 
 
 class PostList {
-  List<CloudPostsModel> posts;
+  List<ReviewPostsModel> posts;
 
   PostList({required this.posts});
 
   factory PostList.fromJson(List<dynamic> data) {
-    List<CloudPostsModel> dataList = [];
+    List<ReviewPostsModel> dataList = [];
     dataList = data.map((item) {
-      return CloudPostsModel.fromJson(Map<String, dynamic>.from(item));
+      return ReviewPostsModel.fromJson(Map<String, dynamic>.from(item));
     }).toList();
     return PostList(posts: dataList);
   }

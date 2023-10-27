@@ -1,22 +1,21 @@
-import 'dart:core';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:myapp/FireBase/real_time_dataBase/post_model.dart';
-import 'package:myapp/state_management/Provider/Models/real_time_post_provider.dart';
+import 'package:myapp/router/constant_router.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../router/constant_router.dart';
+import '../../FireBase/firebase_cloud/buy_sell_posts_model.dart';
+import '../../state_management/Provider/Models/buySell_post_provider.dart';
 
-class AddingPostPage extends StatefulWidget {
-  const AddingPostPage({Key? key}) : super(key: key);
+class SellPostPage extends StatefulWidget {
+  const SellPostPage({Key? key}) : super(key: key);
 
   @override
-  State<AddingPostPage> createState() => _AddingPostPageState();
+  State<SellPostPage> createState() => _SellPostPageState();
 }
 
-class _AddingPostPageState extends State<AddingPostPage> {
+class _SellPostPageState extends State<SellPostPage> {
   final formKey = GlobalKey<FormState>();
   final title = TextEditingController();
   final condition = TextEditingController();
@@ -27,7 +26,7 @@ class _AddingPostPageState extends State<AddingPostPage> {
   @override
   Widget build(BuildContext context) {
     //var PostProvider =Provider.of<PostProvider>(context);
-    var postProvider = Provider.of<PostProvider>(context);
+    var postProvider = Provider.of<BuySellPostProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('sell your book'),
@@ -40,12 +39,12 @@ class _AddingPostPageState extends State<AddingPostPage> {
               TextFieldBook(
                 textEditingController: title,
                 inputDecoration:
-                    inputDecoration('Title', 'The title of your book'),
+                inputDecoration('Title', 'The title of your book'),
               ),
               TextFieldBook(
                 textEditingController: author,
                 inputDecoration:
-                    inputDecoration('Author', 'The author of your book'),
+                inputDecoration('Author', 'The author of your book'),
               ),
               TextFieldBook(
                 textEditingController: price,
@@ -59,7 +58,7 @@ class _AddingPostPageState extends State<AddingPostPage> {
               TextFieldBook(
                 textEditingController: condition,
                 inputDecoration:
-                    inputDecoration('Condition', 'The condition of the book'),
+                inputDecoration('Condition', 'The condition of the book'),
               ),
               SizedBox(
                 height: 10,
@@ -92,7 +91,7 @@ class _AddingPostPageState extends State<AddingPostPage> {
                                       child: const Text('Post'),
                                       onPressed: () async {
                                         //we want to get the data from the controllers then fill the model then send it using Provider
-                                        PostModel model = PostModel(
+                                        BuySellPostModel model = BuySellPostModel(
                                             title: title.text,
                                             author: author.text,
                                             condition: condition.text,
@@ -103,7 +102,7 @@ class _AddingPostPageState extends State<AddingPostPage> {
                                         await postProvider.addPost(model);
                                         log('dose not post anything');
                                         Navigator.of(context)
-                                            .popAndPushNamed(buyBooksPage);
+                                            .popAndPushNamed(buyPostsPage);
                                       }),
                                 ],
                               ),
@@ -138,8 +137,8 @@ InputDecoration inputDecoration(String label, String hint) {
 class TextFieldBook extends StatelessWidget {
   const TextFieldBook(
       {Key? key,
-      required this.textEditingController,
-      required this.inputDecoration})
+        required this.textEditingController,
+        required this.inputDecoration})
       : super(key: key);
   final TextEditingController textEditingController;
   final InputDecoration inputDecoration;

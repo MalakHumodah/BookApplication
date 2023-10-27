@@ -1,240 +1,200 @@
-import 'dart:ui';
+import 'package:flutter/foundation.dart';
+
+class PostModel extends ChangeNotifier{
+  String? id;
+  String? title;
+  String? date;
+  String? condition;
+  String? author;
+  String? address;
+  int? price;
+
+  PostModel(
+      {this.id,
+        this.title,
+        this.date,
+        this.condition,
+        this.author,
+        this.address,
+        this.price});
+
+  PostModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    title = json['title'];
+    date = json['date'];
+    condition = json['condition'];
+    author = json['author'];
+    address = json['address'];
+    price = json['price'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data =  <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['date'] = date;
+    data['condition'] = condition;
+    data['author'] = author;
+    data['address'] = address;
+    data['price'] = price;
+    return data;
+  }
+}
+
+class PostList {
+  List<PostModel> posts;
+
+  PostList({required this.posts});
+
+  factory PostList.fromJson(List<dynamic> data) {
+    List<PostModel> dataList = [];
+    dataList = data.map((item) {
+      return PostModel.fromJson(Map<String, dynamic>.from(item));
+    }).toList();
+    return PostList(posts: dataList);
+  }
+}
+
+class CloudPostsModel {
+  String? id;
+  String? title;
+  String? author;
+  String? type;
+  String? summary;
+
+  CloudPostsModel({this.id, this.title, this.author, this.type, this.summary});
+
+  CloudPostsModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    title = json['title'];
+    author = json['author'];
+    type = json['type'];
+    summary = json['summary'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data =  <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['author'] = author;
+    data['type'] = type;
+    data['summary'] = summary;
+    return data;
+  }
+}
+
+
+/*class PostList {
+  List<CloudPostsModel> posts;
+
+  PostList({required this.posts});
+
+  factory PostList.fromJson(List<dynamic> data) {
+    List<CloudPostsModel> dataList = [];
+    dataList = data.map((item) {
+      return CloudPostsModel.fromJson(Map<String, dynamic>.from(item));
+    }).toList();
+    return PostList(posts: dataList);
+  }
+}*/
+
+
+
+
+
+
+//*******************************
+/*import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:myapp/JSON/models/book_model.dart';
-import 'package:myapp/pages/top_books_page.dart';
-import '../JSON/services/book_service.dart';
-import '../router/constant_router.dart';
 
-class HomePageWidget extends StatefulWidget {
-  const HomePageWidget({Key? key}) : super(key: key);
 
-  @override
-  State<HomePageWidget> createState() => _HomePageWidgetState();
-}
+import '../../SharedPref/shared_pref.dart';
 
-class _HomePageWidgetState extends State<HomePageWidget> {
-  final BookService _service = BookService();
-  BooksList? booksList;
+class CloudPostProvider extends ChangeNotifier {
+  final CloudPostService _postService = CloudPostService();
 
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _service.loadBooksData(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            booksList = snapshot.data;
-            return Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10.0, top: 20, left: 16),
-                  child: Text(
-                    'Best Books in 2023',
-                    style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'PlayfairDisplay'),
-                  ),
-                ),
+//because we want to change data so every fun in the service we need to build change data for it
 
-                Expanded(
-                  child: ListView.separated(
-                      itemBuilder: (context, int index) {
-                        var book = booksList?.books[index];
-                        return MyWidget(
-                            title: book!.title!,
-                            img: book.img!,
-                            type: book.type!);
-                      },
-                      scrollDirection: Axis.horizontal,
-                      separatorBuilder: (context, index) {
-                        return Divider();
-                      },
-                      itemCount: booksList!.books.length),
-                ),
-                SizedBox(height: 50,),
-                Expanded(
-                  child: MyCards(
-                      txt: 'Buy/Sell your books',
-                      img: 'assets/Imgs/BuySellYourBook.png',
-                      color: Colors.amber,
-                      title: 'Buy/sell'),
-                ),
-                Expanded(
-                  child: MyCards(
-                      txt: 'Share your review',
-                      img: 'assets/Imgs/shareYourReview.jpg.webp',
-                      color: Colors.deepPurpleAccent,
-                      title: 'Share'),
-                ),
-              ],
-            );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        });
-
-    ///Best Books in 2023 Text
-  }
-}
-
-class MyCards extends StatelessWidget {
-  const MyCards({
-    Key? key,
-    required this.txt,
-    required this.img,
-    required this.color,
-    required this.title,
-  }) : super(key: key);
-  final String txt;
-  final String title;
-  final String img;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 300,
-        width: 200,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: color,
-            border: Border.all(
-              color: Colors.transparent,
-            )),
-        //this column contain img,title and type
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  height: 220,
-                  width: 200,
-                  clipBehavior: Clip.antiAlias,
-                  decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                  child: Image.asset(
-                    img,
-                    fit: BoxFit.fill,
-                  )),
-            ),
-            Text(
-              txt,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class MyWidget extends StatelessWidget {
-  const MyWidget({
-    Key? key,
-    required this.title,
-    required this.img,
-    required this.type,
-  }) : super(key: key);
-
-  final String title;
-  final String img;
-  final String type;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 250,
-        width: 200,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.transparent,
-            border: Border.all(
-              color: Colors.transparent,
-            )),
-        //this column contain img,title and type
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                  height: 220,
-                  width: 200,
-                  clipBehavior: Clip.antiAlias,
-                  decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                  child: Image.asset(
-                    img,
-                    fit: BoxFit.fill,
-                  )),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(7.0),
-              child: Text(
-                title,
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w800),
-                textAlign: TextAlign.start,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 5),
-              child: Text(
-                type,
-                style: TextStyle(fontSize: 17, fontWeight: FontWeight.w300),
-                textAlign: TextAlign.start,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+  Future<void> addPost(CloudPostsModel model) async {
+    await _postService.addPost(model).whenComplete(() {
+      log("adding post from PostProvider is done");
+    }).catchError((error) {
+      log("Error in PostProvider class in when adding post process and the error is : $error");
+    });
+    notifyListeners();
   }
 
-/*void _gotoDetailsPage(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute<void>(
-      builder: (BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Details of the selected book'),
-        ),
-        body: Center(
-          child: Hero(
-              tag: 'hero-details',
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Image.asset(
-                        img,
-                        height: 300,
-                        width: 300,
-                      ),
-                    ),
-                    Divider(
-                      thickness: 2,
-                    ),
-                    MyText(txt: 'Title', data: title),
-                    MyText(txt: 'Author', data: author),
-                    MyText(txt: 'Type', data: type),
-                    MyText(txt: 'Description', data: description),
-                  ],
-                ),
-              )),
-        ),
-      ),
-    ));
-  }*/
+  Future<PostList> getPost() async {
+    log("get post from provider page is done");
+    return await _postService.getPosts();
+  }
+
+  PostList get offlinePosts {
+    List<CloudPostsModel> postList = [];
+    //get --> null
+    var data = Prefs.getStringList('postsData') ?? [];
+    if (data.isNotEmpty) {
+      //convert list of strings --> model -- add model list -- send Post List
+      for (var item in data) {
+        var decodeData = json.decode(item);
+        CloudPostsModel model = CloudPostsModel.fromJson(decodeData);
+        postList.add(model);
+      }
+      return PostList(posts: postList);
+    } else {
+      return PostList(posts: []);
+    }
+  }
+
+
+
+
+  Future<void> updatePost(String id, CloudPostsModel model) async {
+    await _postService.updatePost(id, model).whenComplete(() {
+      refreshPrefs();
+      notifyListeners();
+    }).catchError((e) {
+      log("Update post --> $e");
+    });
+    //BACK
+  }
+
+  Future<void> deletePost(String id) async {
+    await _postService.deletePost(id).whenComplete(() {
+      refreshPrefs();
+      notifyListeners();
+    }).catchError((e) {
+      log("Delete Post --> $e");
+    });
+  }
+
+  CloudPostsModel getPostById(String id) {
+    var model = offlinePosts.posts.singleWhere((element) {
+      if (element.id == id) {
+        return true;
+      }
+      return false;
+    });
+    return model;
+  }
+
+  void refreshPrefs() async {
+    await Prefs.remove('postsData');
+    String encodeData = '';
+    List<String> posts = [];
+    PostList postList = await _postService.getPosts(); //get all data
+    for (var item in postList.posts) {
+      encodeData = json.encode(item.toJson());
+      posts.add(encodeData);
+    }
+    Prefs.setStringList('postsData', posts);
+  }
+
+
+
+
+
 }
+*/

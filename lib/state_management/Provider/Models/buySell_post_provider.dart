@@ -1,18 +1,19 @@
+
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
-import '../../../FireBase/firebase_cloud/cloud_post_service.dart';
-import '../../../FireBase/firebase_cloud/cloud_posts_model.dart';
+import '../../../FireBase/firebase_cloud/buySell_post_service.dart';
+import '../../../FireBase/firebase_cloud/buy_sell_posts_model.dart';
 import '../../SharedPref/shared_pref.dart';
 
-class CloudPostProvider extends ChangeNotifier {
-  final CloudPostService _postService = CloudPostService();
+class BuySellPostProvider extends ChangeNotifier {
+  final BuySellPostService _postService = BuySellPostService();
 
-//because we want to change data so every fun in the service we need to build change data for it
+  //because we want to change data so every fun in the service we need to build change data for it
 
-  Future<void> addPost(CloudPostsModel model) async {
+  Future<void> addPost(BuySellPostModel model) async {
     await _postService.addPost(model).whenComplete(() {
       log("adding post from PostProvider is done");
     }).catchError((error) {
@@ -27,14 +28,14 @@ class CloudPostProvider extends ChangeNotifier {
   }
 
   PostList get offlinePosts {
-    List<CloudPostsModel> postList = [];
+    List<BuySellPostModel> postList = [];
     //get --> null
     var data = Prefs.getStringList('postsData') ?? [];
     if (data.isNotEmpty) {
       //convert list of strings --> model -- add model list -- send Post List
       for (var item in data) {
         var decodeData = json.decode(item);
-        CloudPostsModel model = CloudPostsModel.fromJson(decodeData);
+        BuySellPostModel model = BuySellPostModel.fromJson(decodeData);
         postList.add(model);
       }
       return PostList(posts: postList);
@@ -46,7 +47,7 @@ class CloudPostProvider extends ChangeNotifier {
 
 
 
-  Future<void> updatePost(String id, CloudPostsModel model) async {
+  Future<void> updatePost(String id, BuySellPostModel model) async {
     await _postService.updatePost(id, model).whenComplete(() {
       refreshPrefs();
       notifyListeners();
@@ -65,7 +66,7 @@ class CloudPostProvider extends ChangeNotifier {
     });
   }
 
-  CloudPostsModel getPostById(String id) {
+  BuySellPostModel getPostById(String id) {
     var model = offlinePosts.posts.singleWhere((element) {
       if (element.id == id) {
         return true;
@@ -86,9 +87,6 @@ class CloudPostProvider extends ChangeNotifier {
     }
     Prefs.setStringList('postsData', posts);
   }
-
-
-
 
 
 }
