@@ -12,12 +12,13 @@ class UserModel {
 
   // map(json) to model(obj)
   //named constructor
-  UserModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    email = json['email'];
-    password = json['password'];
-    phoneNum = json['phoneNum'];
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+    id : json['id'],
+    name : json['name'],
+    email : json['email'],
+    password : json['password'],
+    phoneNum : json['phoneNum']);
   }
 
   //model -> json
@@ -30,4 +31,13 @@ class UserModel {
     data['phoneNum'] = phoneNum;
     return data;
   }
+
+  UserModel.fromJson2(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    email = json['email'];
+    password = json['password'];
+    phoneNum = json['phoneNum'];
+  }
+
 }

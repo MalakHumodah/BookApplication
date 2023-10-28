@@ -1,11 +1,15 @@
 import 'dart:collection';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:myapp/FireBase/authentication/auth_services/authen_service.dart';
 
+import '../../FireBase/authentication/auth_services/connectivity_service.dart';
 import '../../router/constant_router.dart';
 import 'package:myapp/state_management/SharedPref/shared_pref.dart';
 
 import '../../state_management/SharedPref/service/user_service.dart';
+import '../../widgets/internet_connection_dialog.dart';
+import '../../widgets/loader.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -18,13 +22,15 @@ class _SignUpPageState extends State<SignUpPage> {
   Color c1 = Color(0xCDf0eafb); // white -> background of container
   Color c2 = Color(0xCDa56cf0); // purple (dark) -> color of font
   Color c3 = Color(0xCD6d598e); // purple (More dark) -> color of font
-
+  final AuthService authService = AuthService();
   final email = TextEditingController();
   final password = TextEditingController();
   final userName = TextEditingController();
   final phoneNum = TextEditingController();
+  final _loaderKey = GlobalKey<State>();
 
-  HashMap userMap=HashMap();
+
+  HashMap userMap = HashMap();
   final UserService _service = UserService();
   bool isVisible = true;
 
@@ -45,7 +51,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ///Image as background
             Center(
                 child:
-                Image.asset('assets/Imgs/signUpBG.jpg', fit: BoxFit.fill)),
+                    Image.asset('assets/Imgs/signUpBG.jpg', fit: BoxFit.fill)),
 
             //The container that contain Form
             Padding(
@@ -103,10 +109,10 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide:
-                                  BorderSide(color: c3, width: 2.5)),
+                                      BorderSide(color: c3, width: 2.5)),
                               focusedBorder: UnderlineInputBorder(
                                   borderSide:
-                                  BorderSide(color: c2, width: 2.5)),
+                                      BorderSide(color: c2, width: 2.5)),
                             ),
                           ),
                           SizedBox(
@@ -141,10 +147,10 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide:
-                                  BorderSide(color: c3, width: 2.5)),
+                                      BorderSide(color: c3, width: 2.5)),
                               focusedBorder: UnderlineInputBorder(
                                   borderSide:
-                                  BorderSide(color: c2, width: 2.5)),
+                                      BorderSide(color: c2, width: 2.5)),
                             ),
                           ),
                           SizedBox(
@@ -176,33 +182,33 @@ class _SignUpPageState extends State<SignUpPage> {
                               hintStyle: TextStyle(color: Colors.black38),
                               suffixIcon: isVisible
                                   ? InkWell(
-                                child: Icon(
-                                  Icons.visibility_off,
-                                  color: c3,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    isVisible = !isVisible;
-                                  });
-                                },
-                              )
+                                      child: Icon(
+                                        Icons.visibility_off,
+                                        color: c3,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          isVisible = !isVisible;
+                                        });
+                                      },
+                                    )
                                   : InkWell(
-                                child: Icon(
-                                  Icons.visibility,
-                                  color: c3,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    isVisible = !isVisible;
-                                  });
-                                },
-                              ),
+                                      child: Icon(
+                                        Icons.visibility,
+                                        color: c3,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          isVisible = !isVisible;
+                                        });
+                                      },
+                                    ),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide:
-                                  BorderSide(color: c3, width: 2.5)),
+                                      BorderSide(color: c3, width: 2.5)),
                               focusedBorder: UnderlineInputBorder(
                                   borderSide:
-                                  BorderSide(color: c2, width: 2.5)),
+                                      BorderSide(color: c2, width: 2.5)),
                             ),
                           ),
                           SizedBox(
@@ -238,26 +244,26 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                               enabledBorder: UnderlineInputBorder(
                                   borderSide:
-                                  BorderSide(color: c3, width: 2.5)),
+                                      BorderSide(color: c3, width: 2.5)),
                               focusedBorder: UnderlineInputBorder(
                                   borderSide:
-                                  BorderSide(color: c2, width: 2.5)),
+                                      BorderSide(color: c2, width: 2.5)),
                             ),
                           ),
                           SizedBox(
                             height: 10,
                           ),
 
-
                           ///Go to sign up page
                           TextButton(
-                              onPressed: (){
-                                Navigator.of(context).popAndPushNamed(signInPage);
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .popAndPushNamed(signInPage);
                               },
-                              child: Text('You have an account?',
-                                style:TextStyle(color: c3),
-                              )
-                          ),
+                              child: Text(
+                                'You have an account?',
+                                style: TextStyle(color: c3),
+                              )),
                           SizedBox(
                             height: 30,
                           ),
@@ -268,25 +274,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: c3),
                                 onPressed: () async {
-                                  if (formKey.currentState!.validate())
-                                  {
-                                    //fill map
-                                    userMap['email']=email.text;
-                                    userMap['password']=password.text;
-                                    userMap['name']=userName.text;
-                                    userMap['phoneNum']=phoneNum.text;
-                                    bool result =await _service.signUp(userMap);
-                                    if (result) {
-                                      Prefs.setString("userEmail", email.text);
-                                      Navigator.of(context).popAndPushNamed(signInPage);
-                                    }
-                                    else {
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Email not found')));
-                                    }
-                                  }
-                                  else {
-                                    log('Error');
-                                  }
+                                  validateAndSubmit(context);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -310,10 +298,61 @@ class _SignUpPageState extends State<SignUpPage> {
           ],
         ));
   }
+
+  void validateAndSubmit(BuildContext context) async {
+    if (formKey.currentState!.validate()) {
+      if (await ConnectivityService.checkInternetConnectivity()) {
+        Loader.showLoadingScreen(context, _loaderKey);
+        //1:
+        var userData = HashMap();
+        userData['email'] = email.text.trim();
+        userData['password'] = password.text.trim();
+        userData['name'] = userName.text.trim();
+        userData['phoneNum'] = phoneNum.text.trim();
+
+
+        ///for prefs file
+        bool result1 =
+        await _service.signUp(userData);
+        if (result1) {
+          Prefs.setString("userEmail", email.text);
+          Navigator.of(context)
+              .popAndPushNamed(signInPage);
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(
+              content:
+              Text('Email not found')));
+        }
+
+
+        //2:
+        var result =await authService.signUp(userData);
+
+        //3:
+        Navigator.of(_loaderKey.currentContext ?? context, rootNavigator: true)
+            .pop();
+
+        if (result == "Weak Password") {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Password should be al least 6 letters")));
+        } else if (result == "The account is already exists Try Sign in") {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Email is used")));
+        } else {
+          //Navigator to home page
+          Navigator.of(context).pushReplacementNamed(signInPage);
+
+        }
+      } else {
+        internetConnectionDialog(context);
+      }
+    }
+  }
 }
 
 bool emailValidate(String email) {
   return RegExp(
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
       .hasMatch(email);
 }

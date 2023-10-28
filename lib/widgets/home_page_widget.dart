@@ -99,7 +99,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
               /// My Card 3
               SliverToBoxAdapter(
                 child: MyCards(
-                  txt: 'search about your fav Book',
+                  txt: 'Give you information about the top 3 relevant books you searched for including its pdf link',
                   img: 'assets/Imgs/searchBook.png',
                   color: Colors.blueAccent,
                   title: 'Search',
@@ -184,7 +184,7 @@ class MyCards extends StatelessWidget {
                           TextStyle(fontSize: 35, fontWeight: FontWeight.w500),
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     Text(
                       txt,

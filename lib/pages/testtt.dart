@@ -1,200 +1,361 @@
-import 'package:flutter/foundation.dart';
-
-class PostModel extends ChangeNotifier{
-  String? id;
-  String? title;
-  String? date;
-  String? condition;
-  String? author;
-  String? address;
-  int? price;
-
-  PostModel(
-      {this.id,
-        this.title,
-        this.date,
-        this.condition,
-        this.author,
-        this.address,
-        this.price});
-
-  PostModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    date = json['date'];
-    condition = json['condition'];
-    author = json['author'];
-    address = json['address'];
-    price = json['price'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
-    data['id'] = id;
-    data['title'] = title;
-    data['date'] = date;
-    data['condition'] = condition;
-    data['author'] = author;
-    data['address'] = address;
-    data['price'] = price;
-    return data;
-  }
-}
-
-class PostList {
-  List<PostModel> posts;
-
-  PostList({required this.posts});
-
-  factory PostList.fromJson(List<dynamic> data) {
-    List<PostModel> dataList = [];
-    dataList = data.map((item) {
-      return PostModel.fromJson(Map<String, dynamic>.from(item));
-    }).toList();
-    return PostList(posts: dataList);
-  }
-}
-
-class CloudPostsModel {
-  String? id;
-  String? title;
-  String? author;
-  String? type;
-  String? summary;
-
-  CloudPostsModel({this.id, this.title, this.author, this.type, this.summary});
-
-  CloudPostsModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    author = json['author'];
-    type = json['type'];
-    summary = json['summary'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
-    data['id'] = id;
-    data['title'] = title;
-    data['author'] = author;
-    data['type'] = type;
-    data['summary'] = summary;
-    return data;
-  }
-}
-
-
-/*class PostList {
-  List<CloudPostsModel> posts;
-
-  PostList({required this.posts});
-
-  factory PostList.fromJson(List<dynamic> data) {
-    List<CloudPostsModel> dataList = [];
-    dataList = data.map((item) {
-      return CloudPostsModel.fromJson(Map<String, dynamic>.from(item));
-    }).toList();
-    return PostList(posts: dataList);
-  }
-}*/
-
-
-
-
-
-
-//*******************************
-/*import 'dart:convert';
+import 'dart:collection';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:myapp/FireBase/authentication/auth_services/authen_service.dart';
 
+import '../../FireBase/authentication/auth_services/connectivity_service.dart';
+import '../../router/constant_router.dart';
+import 'package:myapp/state_management/SharedPref/shared_pref.dart';
 
-import '../../SharedPref/shared_pref.dart';
+import '../../state_management/SharedPref/service/user_service.dart';
+import '../../widgets/internet_connection_dialog.dart';
+import '../../widgets/loader.dart';
 
-class CloudPostProvider extends ChangeNotifier {
-  final CloudPostService _postService = CloudPostService();
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({Key? key}) : super(key: key);
 
-//because we want to change data so every fun in the service we need to build change data for it
-
-  Future<void> addPost(CloudPostsModel model) async {
-    await _postService.addPost(model).whenComplete(() {
-      log("adding post from PostProvider is done");
-    }).catchError((error) {
-      log("Error in PostProvider class in when adding post process and the error is : $error");
-    });
-    notifyListeners();
-  }
-
-  Future<PostList> getPost() async {
-    log("get post from provider page is done");
-    return await _postService.getPosts();
-  }
-
-  PostList get offlinePosts {
-    List<CloudPostsModel> postList = [];
-    //get --> null
-    var data = Prefs.getStringList('postsData') ?? [];
-    if (data.isNotEmpty) {
-      //convert list of strings --> model -- add model list -- send Post List
-      for (var item in data) {
-        var decodeData = json.decode(item);
-        CloudPostsModel model = CloudPostsModel.fromJson(decodeData);
-        postList.add(model);
-      }
-      return PostList(posts: postList);
-    } else {
-      return PostList(posts: []);
-    }
-  }
-
-
-
-
-  Future<void> updatePost(String id, CloudPostsModel model) async {
-    await _postService.updatePost(id, model).whenComplete(() {
-      refreshPrefs();
-      notifyListeners();
-    }).catchError((e) {
-      log("Update post --> $e");
-    });
-    //BACK
-  }
-
-  Future<void> deletePost(String id) async {
-    await _postService.deletePost(id).whenComplete(() {
-      refreshPrefs();
-      notifyListeners();
-    }).catchError((e) {
-      log("Delete Post --> $e");
-    });
-  }
-
-  CloudPostsModel getPostById(String id) {
-    var model = offlinePosts.posts.singleWhere((element) {
-      if (element.id == id) {
-        return true;
-      }
-      return false;
-    });
-    return model;
-  }
-
-  void refreshPrefs() async {
-    await Prefs.remove('postsData');
-    String encodeData = '';
-    List<String> posts = [];
-    PostList postList = await _postService.getPosts(); //get all data
-    for (var item in postList.posts) {
-      encodeData = json.encode(item.toJson());
-      posts.add(encodeData);
-    }
-    Prefs.setStringList('postsData', posts);
-  }
-
-
-
-
-
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
 }
-*/
+
+class _SignUpPageState extends State<SignUpPage> {
+  Color c1 = Color(0xCDf0eafb); // white -> background of container
+  Color c2 = Color(0xCDa56cf0); // purple (dark) -> color of font
+  Color c3 = Color(0xCD6d598e); // purple (More dark) -> color of font
+  final AuthService authService = AuthService();
+  final email = TextEditingController();
+  final password = TextEditingController();
+  final userName = TextEditingController();
+  final phoneNum = TextEditingController();
+  final _loaderKey = GlobalKey<State>();
+
+
+  HashMap userMap = HashMap();
+  final UserService _service = UserService();
+  bool isVisible = true;
+
+  final formKey = GlobalKey<FormState>(); // Form key
+
+  @override
+  Widget build(BuildContext context) {
+    //double height = MediaQuery.of(context).size.height;
+    //double width = MediaQuery.of(context).size.width;
+    return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: c3,
+          title: Text('SignUpPage'),
+        ),
+        body: Stack(
+          children: [
+            ///Image as background
+            Center(
+                child:
+                Image.asset('assets/Imgs/signUpBG.jpg', fit: BoxFit.fill)),
+
+            //The container that contain Form
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                height: double.maxFinite,
+                width: double.maxFinite,
+                color: c1,
+                child: Form(
+                  key: formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ///Text (SignUp)
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Text(
+                            'Sign Up',
+                            style: TextStyle(
+                                fontSize: 40,
+                                color: c2,
+                                fontWeight: FontWeight.w800),
+                            textAlign: TextAlign.start,
+                          ),
+                          SizedBox(
+                            height: 40,
+                          ),
+
+                          ///User Name Field
+                          Text(
+                            'User Name',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: c3,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          TextFormField(
+                            controller: userName,
+                            validator: (input) {
+                              if (input!.isEmpty) {
+                                return 'please enter your Name';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Your Name',
+                              hintStyle: TextStyle(color: Colors.black38),
+                              suffixIcon: Icon(
+                                Icons.account_circle,
+                                color: c3,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: c3, width: 2.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: c2, width: 2.5)),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+
+                          ///Email Field
+                          Text(
+                            'Email',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: c3,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          TextFormField(
+                            controller: email,
+                            validator: (input) {
+                              if (input!.isEmpty) {
+                                return 'please enter your Email';
+                              }
+                              if (!emailValidate(input)) {
+                                return 'In Correct Email';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'example@example.com',
+                              hintStyle: TextStyle(color: Colors.black38),
+                              suffixIcon: Icon(
+                                Icons.mail,
+                                color: c3,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: c3, width: 2.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: c2, width: 2.5)),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+
+                          ///Password Field
+                          Text(
+                            'Password',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: c3,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          TextFormField(
+                            controller: password,
+                            validator: (input) {
+                              if (input!.isEmpty) {
+                                return 'please enter your password';
+                              }
+                              if (input.length < 6) {
+                                return 'the password must be more than 6 numbers';
+                              }
+                              return null;
+                            },
+                            obscureText: isVisible,
+                            decoration: InputDecoration(
+                              hintText: 'Password',
+                              hintStyle: TextStyle(color: Colors.black38),
+                              suffixIcon: isVisible
+                                  ? InkWell(
+                                child: Icon(
+                                  Icons.visibility_off,
+                                  color: c3,
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    isVisible = !isVisible;
+                                  });
+                                },
+                              )
+                                  : InkWell(
+                                child: Icon(
+                                  Icons.visibility,
+                                  color: c3,
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    isVisible = !isVisible;
+                                  });
+                                },
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: c3, width: 2.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: c2, width: 2.5)),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+
+                          ///Phone Number Field
+                          Text(
+                            'Phone Number',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: c3,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          TextFormField(
+                            controller: phoneNum,
+                            validator: (input) {
+                              if (input!.isEmpty) {
+                                return 'please enter your Phone Number';
+                              }
+                              if (input.length < 10 || input.length > 10) {
+                                return 'Incorrect Phone Number';
+                              }
+
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: '0798745632',
+                              hintStyle: TextStyle(color: Colors.black38),
+                              suffixIcon: Icon(
+                                Icons.phone,
+                                color: c3,
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: c3, width: 2.5)),
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                  BorderSide(color: c2, width: 2.5)),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+
+                          ///Go to sign up page
+                          TextButton(
+                              onPressed: () {
+                                Navigator.of(context)
+                                    .popAndPushNamed(signInPage);
+                              },
+                              child: Text(
+                                'You have an account?',
+                                style: TextStyle(color: c3),
+                              )),
+                          SizedBox(
+                            height: 30,
+                          ),
+
+                          ///Button
+                          Center(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: c3),
+                                onPressed: () async {
+                                  validateAndSubmit(context);
+                                  if (formKey.currentState!.validate()) {
+                                    //fill map
+                                    userMap['email'] = email.text;
+                                    userMap['password'] = password.text;
+                                    userMap['name'] = userName.text;
+                                    userMap['phoneNum'] = phoneNum.text;
+                                    bool result =
+                                    await _service.signUp(userMap);
+                                    if (result) {
+                                      Prefs.setString("userEmail", email.text);
+                                      Navigator.of(context)
+                                          .popAndPushNamed(signInPage);
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                          content:
+                                          Text('Email not found')));
+                                    }
+                                  } else {
+                                    log('Error');
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 100.0, vertical: 15),
+                                  child: Text(
+                                    'SignUp',
+                                    style: TextStyle(fontSize: 19),
+                                  ),
+                                )),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ));
+  }
+
+  void validateAndSubmit(BuildContext context) async {
+    if (formKey.currentState!.validate()) {
+      if (await ConnectivityService.checkInternetConnectivity()) {
+        Loader.showLoadingScreen(context, _loaderKey);
+        //1:
+        var userData = HashMap();
+        userData['email'] = email.text.trim();
+        userData['password'] = password.text.trim();
+        userData['name'] = userName.text.trim();
+
+        //2:
+        var result =await authService.signUp(userData);
+        //3:
+        Navigator.of(_loaderKey.currentContext ?? context, rootNavigator: true)
+            .pop();
+
+        if (result == "Weak Password") {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Password should be al least 6 letters")));
+        } else if (result == "The account is already exists Try Sign in") {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Email is used")));
+        } else {
+          //Navigator to home page
+          Navigator.of(context).pushReplacementNamed(signInPage);
+
+        }
+      } else {
+        internetConnectionDialog(context);
+      }
+    }
+  }
+}
+
+bool emailValidate(String email) {
+  return RegExp(
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+      .hasMatch(email);
+}
