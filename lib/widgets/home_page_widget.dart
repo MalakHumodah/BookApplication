@@ -104,7 +104,20 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                   color: Colors.blueAccent,
                   title: 'Search',
                   onTap: () {
-                    //Navigator.of(context).pushNamed(buyBooksPage);
+                    Navigator.of(context).pushNamed(searchPage);
+                  },
+                ),
+              ),
+
+              /// My Card 4
+              SliverToBoxAdapter(
+                child: MyCards(
+                  txt: 'explore more books',
+                  img: 'assets/Imgs/card4.png',
+                  color: Colors.green,
+                  title: 'Random 3 Books',
+                  onTap: () {
+                    Navigator.of(context).pushNamed(allBooksPage);
                   },
                 ),
               ),

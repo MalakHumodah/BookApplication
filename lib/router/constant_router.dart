@@ -11,6 +11,10 @@ const String buyPostsPage = '/buyPostsPage';
 const String sellPostPage = '/sellPostPage';
 const String addingReviewPostPage = '/AddingReviewPostPage';
 const String reviewPostsPage = '/ReviewPostsPage';
+const String profilePage = '/ProfilePage';
+const String imageViewer = '/ImageViewerScreen';
+const String searchPage = '/SearchPage';
+const String allBooksPage = '/AllBooksPage';
 
 
 

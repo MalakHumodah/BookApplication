@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../state_management/SharedPref/user_model.dart';
 
@@ -10,8 +11,8 @@ class AuthService {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late CollectionReference collectionReference;
-
-
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  User? user;
 
 
   ///signIn fun
@@ -22,7 +23,8 @@ class AuthService {
       var user = await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       msg = user.user!.uid; //to know i'm i which case
-    } on FirebaseAuthException catch (e) { //to limit the errors that related to firebaseAuth
+    } on FirebaseAuthException catch (e) {
+      //to limit the errors that related to firebaseAuth
       if (e.code == 'user-not-found') {
         msg = "NO USER FOUND";
       } else if (e.code == 'wrong-password') {
@@ -32,7 +34,6 @@ class AuthService {
     log(msg);
     return msg;
   }
-
 
   ///SignUp fun
   Future<String> signUp(HashMap userValues) async {
@@ -72,15 +73,14 @@ class AuthService {
 
   Future<UserModel> getUser(String id) async {
     QuerySnapshot result =
-    await collectionReference.where('uid', isEqualTo: id).get();
+        await collectionReference.where('uid', isEqualTo: id).get();
     //doc -> json map --> model
     var data = result.docs[0];
     Map<String, dynamic> userMap = {};
-    userMap['uid'] = data.get('uid');
+    userMap['id'] = data.get('uid');
     userMap['name'] = data.get('name');
     userMap['password'] = data.get('password');
-    userMap['imageURL'] = data.get('imageURL');
-    userMap['loginState'] = data.get('loginState');
+    userMap['phoneNum'] = data.get('phoneNum');
     userMap['email'] = data.get('email');
 
     UserModel model = UserModel.fromJson(userMap);
@@ -89,13 +89,39 @@ class AuthService {
 
   Future<void> updateUser(String id, UserModel userModel) async {
     QuerySnapshot result =
-    await collectionReference.where('uid', isEqualTo: id).get();
+        await collectionReference.where('uid', isEqualTo: id).get();
 
     var docId = result.docs[0].id;
 
     await collectionReference.doc(docId).update(userModel.toJson());
   }
 
+  Future<void> signInWihGoogle() async {
+    //GoogleSignIn -> account --> auth --> credential --> _firebaseAuth.signInWithCredential -->MODEL
+    GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+    GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount!.authentication;
 
+    AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken);
 
+    UserCredential userCredential =
+        await firebaseAuth.signInWithCredential(credential);
+    user = userCredential.user;
+    log(user!.isAnonymous.toString());
+    log(user!.getIdToken() as String);
+    //current user
+    User? currentUser = firebaseAuth.currentUser;
+    var userModel =UserModel(
+        name: currentUser!.displayName,
+        email: currentUser.email,
+        password: 'non',
+        phoneNum: currentUser.phoneNumber,
+        id: currentUser.uid);
+
+    await addUser(userModel).catchError((e) {
+      log(e.toString());
+    });
+  }
 }

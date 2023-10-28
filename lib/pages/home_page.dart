@@ -137,7 +137,11 @@ class _MyDrawerState extends State<MyDrawer> {
           tileWidget(
             icon: Icons.account_circle,
             txt: " Your Profile ",
-            onTap: () {},
+            onTap: () {
+              //ProfilePage
+              Navigator.of(context).popAndPushNamed(profilePage);
+
+            },
           ),
           Divider(
             thickness: 1.5,

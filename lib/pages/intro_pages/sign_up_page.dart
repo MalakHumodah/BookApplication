@@ -29,7 +29,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final phoneNum = TextEditingController();
   final _loaderKey = GlobalKey<State>();
 
-
   HashMap userMap = HashMap();
   final UserService _service = UserService();
   bool isVisible = true;
@@ -77,7 +76,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             style: TextStyle(
                                 fontSize: 40,
                                 color: c2,
-                                fontWeight: FontWeight.w800),
+                                fontFamily: 'PlayfairDisplay',
+                                fontWeight: FontWeight.w600),
                             textAlign: TextAlign.start,
                           ),
                           SizedBox(
@@ -88,9 +88,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           Text(
                             'User Name',
                             style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 17,
                                 color: c3,
-                                fontWeight: FontWeight.w600),
+                                fontFamily: 'Dosis',
+                                fontWeight: FontWeight.bold),
                           ),
                           TextFormField(
                             controller: userName,
@@ -123,9 +124,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           Text(
                             'Email',
                             style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 17,
                                 color: c3,
-                                fontWeight: FontWeight.w600),
+                                fontFamily: 'Dosis',
+                                fontWeight: FontWeight.bold),
                           ),
                           TextFormField(
                             controller: email,
@@ -161,9 +163,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           Text(
                             'Password',
                             style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 17,
                                 color: c3,
-                                fontWeight: FontWeight.w600),
+                                fontFamily: 'Dosis',
+                                fontWeight: FontWeight.bold),
                           ),
                           TextFormField(
                             controller: password,
@@ -219,9 +222,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           Text(
                             'Phone Number',
                             style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 17,
                                 color: c3,
-                                fontWeight: FontWeight.w600),
+                                fontFamily: 'Dosis',
+                                fontWeight: FontWeight.bold),
                           ),
                           TextFormField(
                             controller: phoneNum,
@@ -310,24 +314,18 @@ class _SignUpPageState extends State<SignUpPage> {
         userData['name'] = userName.text.trim();
         userData['phoneNum'] = phoneNum.text.trim();
 
-
         ///for prefs file
-        bool result1 =
-        await _service.signUp(userData);
+        bool result1 = await _service.signUp(userData);
         if (result1) {
           Prefs.setString("userEmail", email.text);
-          Navigator.of(context)
-              .popAndPushNamed(signInPage);
+          Navigator.of(context).popAndPushNamed(signInPage);
         } else {
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(
-              content:
-              Text('Email not found')));
+              .showSnackBar(SnackBar(content: Text('Email not found')));
         }
 
-
         //2:
-        var result =await authService.signUp(userData);
+        var result = await authService.signUp(userData);
 
         //3:
         Navigator.of(_loaderKey.currentContext ?? context, rootNavigator: true)
@@ -342,7 +340,6 @@ class _SignUpPageState extends State<SignUpPage> {
         } else {
           //Navigator to home page
           Navigator.of(context).pushReplacementNamed(signInPage);
-
         }
       } else {
         internetConnectionDialog(context);

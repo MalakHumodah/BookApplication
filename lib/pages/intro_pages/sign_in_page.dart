@@ -41,6 +41,9 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: c2,
+        title: Text(
+          'SignIn Page',
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -79,8 +82,12 @@ class _SignInPageState extends State<SignInPage> {
                                 height: 20,
                               ),
                               Text(
-                                'Sign In',
-                                style: TextStyle(fontSize: 25, color: c1),
+                                'Welcome Back',
+                                style: TextStyle(
+                                    fontSize: 25,
+                                    color: c1,
+                                    fontFamily: 'PlayfairDisplay',
+                                    fontWeight: FontWeight.w600),
                               ),
                               SizedBox(
                                 height: 40,
@@ -89,7 +96,11 @@ class _SignInPageState extends State<SignInPage> {
                               ///Email Field
                               Text(
                                 'Email',
-                                style: TextStyle(fontSize: 15, color: c1),
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: c1,
+                                    fontFamily: 'Dosis',
+                                    fontWeight: FontWeight.bold),
                               ),
                               TextFormField(
                                 controller: email,
@@ -124,7 +135,11 @@ class _SignInPageState extends State<SignInPage> {
                               ///Password Field
                               Text(
                                 'Password',
-                                style: TextStyle(fontSize: 15, color: c1),
+                                style: TextStyle(
+                                    fontSize: 17,
+                                    color: c1,
+                                    fontFamily: 'Dosis',
+                                    fontWeight: FontWeight.bold),
                               ),
                               TextFormField(
                                 controller: password,
@@ -219,7 +234,9 @@ class _SignInPageState extends State<SignInPage> {
                                     width: 15,
                                   ),
                                   IconButton(
-                                      onPressed: () {},
+                                      onPressed: () async {
+                                        await authService.signInWihGoogle();
+                                      },
                                       icon: Image.asset(
                                         'assets/Icons/icons8-google-50.png',
                                       ),

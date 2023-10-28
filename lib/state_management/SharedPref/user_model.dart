@@ -2,11 +2,13 @@
 //the class written from website Json to dart
 
 class UserModel {
+  //imageURL
   String? id;
   String? name;
   String? email;
   String? password;
   String? phoneNum;
+  String? imageURL;
 
   UserModel({this.id, this.name, this.email, this.password, this.phoneNum});
 
